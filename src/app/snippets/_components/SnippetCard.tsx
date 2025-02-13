@@ -88,11 +88,10 @@ function SnippetCard({ snippet }: { snippet: Snippet }) {
                       onClick={handleDelete}
                       disabled={isDeleting}
                       className={`group flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-200
-                                  ${
-                                    isDeleting
-                                      ? "bg-red-500/20 text-red-400 cursor-not-allowed"
-                                      : "bg-gray-500/10 text-gray-400 hover:bg-red-500/10 hover:text-red-400"
-                                  }
+                                  ${isDeleting
+                          ? "bg-red-500/20 text-red-400 cursor-not-allowed"
+                          : "bg-gray-500/10 text-gray-400 hover:bg-red-500/10 hover:text-red-400"
+                        }
                                 `}
                     >
                       {isDeleting ? (
