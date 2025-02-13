@@ -84,7 +84,8 @@ export const starSnippet = mutation({
       .withIndex("by_user_id_and_snippet_id")
       .filter(
         (q) =>
-          q.eq(q.field("userId"), identity.subject) && q.eq(q.field("snippetId"), args.snippetId)
+          q.eq(q.field("userId"), identity.subject) &&
+          q.eq(q.field("snippetId"), args.snippetId)
       )
       .first();
 
@@ -174,53 +175,56 @@ export const getComments = query({
   },
 });
 
-// export const isSnippetStarred = query({
-//   args: {
-//     snippetId: v.id("snippets"),
-//   },
-//   handler: async (ctx, args) => {
-//     const identity = await ctx.auth.getUserIdentity();
-//     if (!identity) return false;
+export const isSnippetStarred = query({
+  args: {
+    snippetId: v.id("snippets"),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return false;
 
-//     const star = await ctx.db
-//       .query("stars")
-//       .withIndex("by_user_id_and_snippet_id")
-//       .filter(
-//         (q) =>
-//           q.eq(q.field("userId"), identity.subject) && q.eq(q.field("snippetId"), args.snippetId)
-//       )
-//       .first();
+    const star = await ctx.db
+      .query("stars")
+      .withIndex("by_user_id_and_snippet_id")
+      .filter(
+        (q) =>
+          q.eq(q.field("userId"), identity.subject) &&
+          q.eq(q.field("snippetId"), args.snippetId)
+      )
+      .first();
 
-//     return !!star;
-//   },
-// });
+    return !!star;
+  },
+});
 
-// export const getSnippetStarCount = query({
-//   args: { snippetId: v.id("snippets") },
-//   handler: async (ctx, args) => {
-//     const stars = await ctx.db
-//       .query("stars")
-//       .withIndex("by_snippet_id")
-//       .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
-//       .collect();
+export const getSnippetStarCount = query({
+  args: { snippetId: v.id("snippets") },
+  handler: async (ctx, args) => {
+    const stars = await ctx.db
+      .query("stars")
+      .withIndex("by_snippet_id")
+      .filter((q) => q.eq(q.field("snippetId"), args.snippetId))
+      .collect();
 
-//     return stars.length;
-//   },
-// });
+    return stars.length;
+  },
+});
 
-// export const getStarredSnippets = query({
-//   handler: async (ctx) => {
-//     const identity = await ctx.auth.getUserIdentity();
-//     if (!identity) return [];
+export const getStarredSnippets = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
 
-//     const stars = await ctx.db
-//       .query("stars")
-//       .withIndex("by_user_id")
-//       .filter((q) => q.eq(q.field("userId"), identity.subject))
-//       .collect();
+    const stars = await ctx.db
+      .query("stars")
+      .withIndex("by_user_id")
+      .filter((q) => q.eq(q.field("userId"), identity.subject))
+      .collect();
 
-//     const snippets = await Promise.all(stars.map((star) => ctx.db.get(star.snippetId)));
+    const snippets = await Promise.all(
+      stars.map((star) => ctx.db.get(star.snippetId))
+    );
 
-//     return snippets.filter((snippet) => snippet !== null);
-//   },
-// });
+    return snippets.filter((snippet) => snippet !== null);
+  },
+});
